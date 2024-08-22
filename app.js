@@ -2,11 +2,7 @@ const express = require('express');
 const app = express();
 const path = require("path");
 const morgan = require('morgan'); //morgan is a middleware function that logs HTTP requests and responses in a Node.js application. It provides a simple way to track the incoming requests and the status of the outgoing responses, which can be very useful for debugging and monitoring the application's behavior.
-//importing the dotenv file
-const dotenv = require("dotenv");
-//indicate the path for the dotenv file
-dotenv.config({ path: "./config.env" });
-console.log(process.env.port);
+
 
 
 const actualIncRouter = require('./routes/actualIncomeRoutes');

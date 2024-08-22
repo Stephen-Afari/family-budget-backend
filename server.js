@@ -1,5 +1,27 @@
+const mongoose = require('mongoose');
 
 
+
+//importing the dotenv file
+const dotenv = require("dotenv");
+//indicate the path for the dotenv file
+dotenv.config({ path: "./config.env" });
+console.log(process.env.port);
+
+//replace with real password
+const DB = process.env.DATABASE.replace(
+    '<PASSWORD>',
+    process.env.DATABASE_PASSWORD
+  );
+
+  mongoose
+  .connect(DB, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true 
+  })
+  .then(() => console.log('DB connection successful!'));
 
 
 

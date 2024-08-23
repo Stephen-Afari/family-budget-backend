@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const Transaction = require('./models/transactionModel')
 
 
 //importing the dotenv file
@@ -23,7 +23,14 @@ const DB = process.env.DATABASE.replace(
   })
   .then(() => console.log('DB connection successful!'));
 
+//testing the database
+// const testTransaction = new Transaction({
+// date: '06-10-2024', subGroup:'electricity', parent:'utilities',description:'light bill' ,amount: 700, target:100
+// });
 
+// testTransaction.save().then(doc=>{
+//     console.log(doc)
+// }).catch(err=>console.log('ERROR',err))
 
 // 4) START SERVER
 //import the app which exported from app.js

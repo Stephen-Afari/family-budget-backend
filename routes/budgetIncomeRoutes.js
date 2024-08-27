@@ -3,7 +3,7 @@ const router = express.Router();
 
 const budgetController = require('../controllers/incomeController');
 
-router.route('/').get(budgetController.getAllBudgInc)
+//router.route('/').get(budgetController.getAllBudgInc)
 
 
 

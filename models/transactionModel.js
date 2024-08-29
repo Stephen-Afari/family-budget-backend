@@ -23,8 +23,17 @@ createdAt: {
 
 
 
-})
+},
+{
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  })
 
+    //DOCUMENT MIDDLEWARE: runs before the save command and .create() command
+    transactionSchema.pre('save', function (next) {
+        this.slug = slugify(this.parent, { lower: true });
+        next();
+      });
 const Transaction = mongoose.model('Transaction', transactionSchema);
 
 module.exports= Transaction;

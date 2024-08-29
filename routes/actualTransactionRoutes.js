@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.route('/').get(actTransactionControler.getAllActTransaction).post(actTransactionControler.createActTransaction)
 
-// router
-//   .route('/:id')
-//   .get(actTransactionControler.getActTransaction).patch(actTransactionControler.u).delete(actTransactionControler.deleteIncome)
+router
+.route('/:id')
+.get(actTransactionControler.getActTransaction).patch(actTransactionControler.updateActTransaction).delete(actTransactionControler.deleteActTransaction)
 
 
 

@@ -21,9 +21,19 @@ createdAt: {
     select: false
   },
 
+ 
 
+},
+{
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  })
 
-})
+  //DOCUMENT MIDDLEWARE: runs before the save command and .create() command
+  actIncomeSchema.pre('save', function (next) {
+    this.slug = slugify(this.parent, { lower: true });
+    next();
+  });
 
 const ActIncome = mongoose.model('ActIncome', actIncomeSchema);
 

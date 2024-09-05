@@ -83,7 +83,8 @@ const signToken = (id) => {
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
     //console.log(decoded);
     //3)Check if user still exists
-    const currentUser = await User.findById(decoded.id);
+    //First, you need a middleware to authenticate users and attach their family information to the request.
+    const currentUser = await User.findById(decoded.id).populate('family');
     if (!currentUser) {
       return next(
         new AppError('The user belonging to this token no longer exits', 401)
@@ -144,6 +145,10 @@ exports.isLoggedIn = async (req, res, next) => {
       next();
     };
   };
+  
+ 
+
+  
 
   exports.forgotPassword = catchAsync(async (req, res, next) => {
     // 1) Get user based on POSTed email

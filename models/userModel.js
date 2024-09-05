@@ -23,11 +23,15 @@ const userSchema = new mongoose.Schema({
       type: String,
       default: 'default.jpg',
     },
+    family: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Family'
+    },
   
     role: {
       type: String,
-      enum: ['user', 'admin'],
-      default: 'user',
+      enum: ['member', 'admin'],
+      default: 'member',
     },
   
     password: {

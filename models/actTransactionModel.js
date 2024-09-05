@@ -15,6 +15,16 @@ description:String,
 amount:Number,
 target: Number,
 slug: String,
+family: {
+  type: mongoose.Schema.ObjectId,
+  ref: 'Family',
+  required: true
+},
+user: {
+  type: mongoose.Schema.ObjectId,
+  ref: 'User',
+  required: true
+},
 createdAt: {
     type: Date,
     default: Date.now(),

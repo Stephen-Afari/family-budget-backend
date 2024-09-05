@@ -11,6 +11,16 @@ parent:{
     type:String,
     required:[true,'An entry must have a parent']
 },
+family: {
+  type: mongoose.Schema.ObjectId,
+  ref: 'Family',
+  required: true
+},
+user: {
+  type: mongoose.Schema.ObjectId,
+  ref: 'User',
+  required: true
+},
 description:String,
 amount:Number,
 target: Number,

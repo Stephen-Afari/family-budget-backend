@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
-
+const authController = require('../controllers/authController')
 const actIncomeControler = require('../controllers/actIncomeController');
 
-router.route('/').get(actIncomeControler.getActAllIncome).post(actIncomeControler.createActIncome)
+router.use(authController.protect); // Ensure user is authenticated for all routes
+
+router.route('/').get(actIncomeControler.restrictToFamily,actIncomeControler.getActAllIncome).post(actIncomeControler.createActIncome)
 
 router
   .route('/:id')
-  .get(actIncomeControler.getActIncome).patch(actIncomeControler.updateActIncome).delete(actIncomeControler.deleteActIncome)
+  .get(actIncomeControler.restrictToFamily,actIncomeControler.getActIncome).patch(actIncomeControler.updateActIncome).delete(actIncomeControler.deleteActIncome)
 
 
 

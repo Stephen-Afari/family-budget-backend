@@ -11,3 +11,4 @@ exports.createActIncome = factory.createOne(ActIncome);
 exports.getActIncome = factory.getOne(ActIncome);
 exports.updateActIncome = factory.updateOne(ActIncome);
 exports.deleteActIncome = factory.deleteOne(ActIncome);
+exports.restrictToFamily= factory.restrictToFamily(ActIncome);

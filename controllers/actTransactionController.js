@@ -9,3 +9,4 @@ exports.createActTransaction = factory.createOne(ActTransaction);
 exports.getActTransaction = factory.getOne(ActTransaction);
 exports.updateActTransaction = factory.updateOne(ActTransaction);
 exports.deleteActTransaction = factory.deleteOne(ActTransaction);
+exports.restrictToFamily= factory.restrictToFamily(ActTransaction);

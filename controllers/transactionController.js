@@ -9,3 +9,4 @@ exports.createIncome = factory.createOne(Transaction);
 exports.getIncome = factory.getOne(Transaction);
 exports.updateIncome = factory.updateOne(Transaction);
 exports.deleteIncome = factory.deleteOne(Transaction);
+exports.restrictToFamily= factory.restrictToFamily(Transaction);

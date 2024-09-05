@@ -86,3 +86,14 @@ exports.getAll = (Model) =>
             },
           });
         });
+
+         //You can create another middleware to ensure that the user can only access data related to their family.
+  exports.restrictToFamily = (Model) => async (req, res, next) => {
+    const data = await Model.find({ family: req.user.family._id });
+    if (!data) {
+      return res.status(403).json({ message: 'No access to this data' });
+    }
+    req.familyData = data;
+    next();
+  };
+  

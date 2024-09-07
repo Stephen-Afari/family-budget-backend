@@ -25,7 +25,8 @@ const userSchema = new mongoose.Schema({
     },
     family: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Family'
+      ref: 'Family',
+      // required: [true, 'Please provide your family name'],
     },
   
     role: {

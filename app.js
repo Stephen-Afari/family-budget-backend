@@ -16,6 +16,7 @@ const actualTrxnRouter = require('./routes/actualTransactionRoutes');
 const budgetIncRouter = require('./routes/budgetIncomeRoutes');
 const budgetTrxnRouter = require('./routes/budgetTransactionRoutes');
 const userRouter = require('./routes/userRoutes');
+const familyRouter = require('./routes/familyRoutes')
 
 //1) GLOBAL MIDDLEWARES
 // Implement CORS
@@ -98,6 +99,7 @@ app.use('/api/v1/acttrxn',actualTrxnRouter);
 app.use('/api/v1/budginc',budgetIncRouter);
 app.use('/api/v1/budgtrxn',budgetTrxnRouter);
 app.use('/api/v1/users',userRouter);
+app.use('/api/v1/family',familyRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

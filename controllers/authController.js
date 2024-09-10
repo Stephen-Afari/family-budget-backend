@@ -5,6 +5,7 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const { findById } = require('../models/userModel');
+const Family = require('../models/familyModel')
 
 //JWT in Authentication:
 //This token is typically used in an authentication system where the server issues the token after the user logs in, and the client sends the token with subsequent requests to access protected resources. The server can then verify the token to authenticate the user.
@@ -22,7 +23,22 @@ const signToken = (id) => {
 //The resulting URL might look like https://www.example.com/me.
 
   exports.signup = catchAsync(async (req, res, next) => {
-    const newUser = await User.create(req.body);
+    // Step 1: Find the family by name
+  const family = await Family.findOne({ name: req.body.family });
+
+  // If no family is found, return an error
+  if (!family) {
+    return next(new AppError('Family not found', 404));
+  }
+
+  // Step 2: Add the family ObjectId to the req.body
+  const newUserDetails = {
+    ...req.body,
+    family: family._id,  // Set the family ObjectId
+  };
+
+  // Step 3: Create the new user with the family ID
+  const newUser = await User.create(newUserDetails);
     const url = `${req.protocol}://${req.get('host')}/me`;
     console.log(url);
     console.log(newUser);
@@ -63,7 +79,7 @@ const signToken = (id) => {
   //The exports.protect function is a middleware designed to protect certain routes in your application by ensuring that only authenticated users can access them
   //The exports.protect function is a middleware designed to protect certain routes in your application by ensuring that only authenticated users can access them
   exports.protect = catchAsync(async (req, res, next) => {
-    //1)Getting the token and check if it exits
+    //1)Getting the token and check if it exists
     let token;
     if (
       req.headers.authorization &&
@@ -113,8 +129,8 @@ exports.isLoggedIn = async (req, res, next) => {
           process.env.JWT_SECRET
         );
         //console.log(decoded);
-        //3)Check if user still exists
-        const currentUser = await User.findById(decoded.id);
+        //3)Check if user still exists.If you are using JWT authentication, ensure that the family field is included when verifying the token:
+        const currentUser = await User.findById(decoded.id).populate('family');
         if (!currentUser) {
           return next();
         }

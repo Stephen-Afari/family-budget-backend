@@ -8,19 +8,29 @@ exports.getAll = (Model) =>
       //To allow for Nested GET reviews on tour
       let filter = {};
       if (req.params.transId) filter = { budg: req.params.transId };
+
+  // Add family filter based on the logged-in user
+  if (req.user && req.user.family && req.user.family._id) {
+    // Filter based on the family ID
+    filter.family = req.user.family._id;  
+  }
+  // console.log(filter)
   //req.query is an object in Express.js that contains key-value pairs of the query string parameters in the URL.
   //For example, if you have a URL like http://example.com/api/v1/tours?sort=price&limit=10, req.query would be an object like this:
   // {
   //   sort: 'price',
   //   limit: '10'
   // }
-      const features = new APIFeatures(Model.find(filter), req.query) 
+  const features = new APIFeatures(
+    Model.find(filter).populate('family').populate('user'), // Add .populate() to populate the family field
+    req.query
+  )
         .filter()
         .sort()
         .limitFields()
         .paginate();
       const doc = await features.query;
-  
+ //console.log('doc:',doc)
       res.status(200).json({
         status: 'success',
         results: doc.length,
@@ -35,7 +45,7 @@ exports.getAll = (Model) =>
           const doc = await Model.findByIdAndDelete(req.params.id);
           //console.log('deleted Tour');
           if (!doc) {
-            return next(new AppError('No tour found with that ID', 404));
+            return next(new AppError('No item found with that ID', 404));
           }
           res.status(204).json({
             status: 'success',
@@ -62,6 +72,10 @@ exports.getAll = (Model) =>
       
       exports.createOne = (Model) =>
         catchAsync(async (req, res, next) => {
+      // If the user is logged in and has a family, attach the family ID to the request body
+    if (req.user && req.user.family) {
+      req.body.family = req.user.family._id; // Automatically set the family from the logged-in user
+    }
           const doc = await Model.create(req.body);
           res.status(201).json({
             status: 'success',
@@ -87,7 +101,7 @@ exports.getAll = (Model) =>
           });
         });
 
-         //You can create another middleware to ensure that the user can only access data related to their family.
+//You can create another middleware to ensure that the user can only access data related to their family.
   exports.restrictToFamily = (Model) => async (req, res, next) => {
     const data = await Model.find({ family: req.user.family._id });
     if (!data) {

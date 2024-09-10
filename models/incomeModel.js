@@ -14,12 +14,12 @@ parent:{
 family: {
   type: mongoose.Schema.ObjectId,
   ref: 'Family',
-  required: true
+  //required: true
 },
 user: {
   type: mongoose.Schema.ObjectId,
   ref: 'User',
-  required: true
+  //required: true
 },
 description:String,
 amount:Number,

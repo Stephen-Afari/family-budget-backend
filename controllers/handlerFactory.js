@@ -7,13 +7,16 @@ exports.getAll = (Model) =>
     catchAsync(async (req, res, next) => {
       //To allow for Nested GET reviews on tour
       let filter = {};
-      if (req.params.transId) filter = { budg: req.params.transId };
+      //if (req.params.transId) filter = { budg: req.params.transId };
 
   // Add family filter based on the logged-in user
   if (req.user && req.user.family && req.user.family._id) {
     // Filter based on the family ID
     filter.family = req.user.family._id;  
   }
+
+   // Optionally allow for nested GET requests (if applicable)
+   if (req.params.transId) filter = { ...filter, budg: req.params.transId };
   // console.log(filter)
   //req.query is an object in Express.js that contains key-value pairs of the query string parameters in the URL.
   //For example, if you have a URL like http://example.com/api/v1/tours?sort=price&limit=10, req.query would be an object like this:
@@ -22,7 +25,7 @@ exports.getAll = (Model) =>
   //   limit: '10'
   // }
   const features = new APIFeatures(
-    Model.find(filter).populate('family').populate('user'), // Add .populate() to populate the family field
+    Model.find(filter).populate('family'), // Add .populate() to populate the family field
     req.query
   )
         .filter()

@@ -14,7 +14,7 @@ exports.getAll = (Model) =>
     // Filter based on the family ID
     filter.family = req.user.family._id;  
   }
-
+  console.log('Family Filter:', filter);
    // Optionally allow for nested GET requests (if applicable)
    if (req.params.transId) filter = { ...filter, budg: req.params.transId };
   // console.log(filter)
@@ -79,6 +79,7 @@ exports.getAll = (Model) =>
     if (req.user && req.user.family) {
       req.body.family = req.user.family._id; // Automatically set the family from the logged-in user
     }
+    console.log('Logged in user:', req.user);
           const doc = await Model.create(req.body);
           res.status(201).json({
             status: 'success',

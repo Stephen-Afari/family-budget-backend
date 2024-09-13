@@ -39,6 +39,11 @@ const signToken = (id) => {
 
   // Step 3: Create the new user with the family ID
   const newUser = await User.create(newUserDetails);
+
+   // Add user to the family's users array
+   family.users.push(newUser._id);
+   await family.save();
+   
     const url = `${req.protocol}://${req.get('host')}/me`;
     console.log(url);
     console.log(newUser);
@@ -60,7 +65,7 @@ const signToken = (id) => {
     if (!user || !(await user.correctPassword(password, user.password))) {
       return next(new AppError('Incorrect email or password', 401));
     }
-    //console.log(user);
+    console.log('user from login', user);
     //3)If everything is ok, send the token to the client
     createSendToken(user, 200, res);
   });

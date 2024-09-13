@@ -25,7 +25,14 @@ exports.getAll = (Model) =>
   //   limit: '10'
   // }
   const features = new APIFeatures(
-    Model.find(filter).populate('family'), // Add .populate() to populate the family field
+    Model.find(filter).populate({
+      path: 'family',
+      populate: {
+        path: 'users', // Populate the users field within the family
+        model: 'User', // Specify the model if necessary
+      },
+    })
+    .populate('user'), // Populate the user field directly on the document, // Add .populate() to populate the family field
     req.query
   )
         .filter()
@@ -33,7 +40,7 @@ exports.getAll = (Model) =>
         .limitFields()
         .paginate();
       const doc = await features.query;
- //console.log('doc:',doc)
+ console.log('doc:',doc)
       res.status(200).json({
         status: 'success',
         results: doc.length,

@@ -43,7 +43,7 @@ const signToken = (id) => {
    // Add user to the family's users array
    family.users.push(newUser._id);
    await family.save();
-   
+
     const url = `${req.protocol}://${req.get('host')}/me`;
     console.log(url);
     console.log(newUser);
@@ -78,6 +78,9 @@ const signToken = (id) => {
       expires: new Date(Date.now() + 10 * 1000),
       httpOnly: true,
     });
+
+      // Explicitly clear req.user
+   //req.user = null;
     res.status(200).json({ status: 'success' });
   };
 
@@ -117,6 +120,8 @@ const signToken = (id) => {
         new AppError('User recently changed Password! Please log in again.', 401)
       );
     }
+      // Log current user details to check if it's the correct user
+  console.log('Current User from Protect:', currentUser);
     //grant access to protected route
     req.user = currentUser;
     res.locals.user = currentUser;

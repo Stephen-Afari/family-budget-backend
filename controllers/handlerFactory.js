@@ -85,6 +85,7 @@ exports.getAll = (Model) =>
       // If the user is logged in and has a family, attach the family ID to the request body
     if (req.user && req.user.family) {
       req.body.family = req.user.family._id; // Automatically set the family from the logged-in user
+      console.log('Family ID for new document:', req.body.family);
     }
     console.log('Logged in user:', req.user);
           const doc = await Model.create(req.body);

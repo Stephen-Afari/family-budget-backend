@@ -45,7 +45,7 @@ const app = require('./app')
 // console.log(app.get('env'));
 //console.log(process.env);
 
-const port = process.env.port;
+const port = process.env.port || 5000 ;
 const server = app.listen(port, () => {
     console.log(`family app server is running on Port: ${port}`);
     });

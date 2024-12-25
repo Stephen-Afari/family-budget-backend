@@ -6,7 +6,7 @@ const authController = require('../controllers/authController')
 
 router.use(authController.protect); // Ensure user is authenticated for all routes
 
-router.route('/').get(incomeControler.restrictToFamily,incomeControler.getAllIncome).post(incomeControler.createIncome)
+router.route('/').get(incomeControler.restrictToFamily,incomeControler.getAllIncome).post(incomeControler.createIncome).delete(incomeControler.deleteAllIncome)
 
 router
   .route('/:id')

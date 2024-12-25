@@ -121,7 +121,7 @@ const signToken = (id) => {
       );
     }
       // Log current user details to check if it's the correct user
-  console.log('Current User from Protect:', currentUser);
+  //console.log('Current User from Protect:', currentUser);
     //grant access to protected route
     req.user = currentUser;
     res.locals.user = currentUser;

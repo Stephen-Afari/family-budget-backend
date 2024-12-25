@@ -5,6 +5,7 @@ const APIFeatures = require('../utils/apiFeatures');
 exports.getAll = (Model) =>
 
     catchAsync(async (req, res, next) => {
+      //console.log('get All fired')
       //To allow for Nested GET reviews on tour
       let filter = {};
       //if (req.params.transId) filter = { budg: req.params.transId };
@@ -14,7 +15,7 @@ exports.getAll = (Model) =>
     // Filter based on the family ID
     filter.family = req.user.family._id;  
   }
-  console.log('Family Filter:', filter);
+  //console.log('Family Filter:', filter);
    // Optionally allow for nested GET requests (if applicable)
    if (req.params.transId) filter = { ...filter, budg: req.params.transId };
   // console.log(filter)
@@ -24,6 +25,7 @@ exports.getAll = (Model) =>
   //   sort: 'price',
   //   limit: '10'
   // }
+
   const features = new APIFeatures(
     Model.find(filter).populate({
       path: 'family',
@@ -40,7 +42,7 @@ exports.getAll = (Model) =>
         .limitFields()
         .paginate();
       const doc = await features.query;
- console.log('doc:',doc)
+ //console.log('doc:',doc)
       res.status(200).json({
         status: 'success',
         results: doc.length,
@@ -62,6 +64,18 @@ exports.getAll = (Model) =>
             data: null,
           });
         });
+    //delete All documents in a collection
+        exports.deleteAll = (Model) =>
+          catchAsync(async (req, res, next) => {
+            // Deletes all documents in the collection
+            const result = await Model.deleteMany(); // Empty filter deletes all documents.
+        
+            res.status(204).json({
+              status: 'success',
+              message: `${result.deletedCount} documents were deleted.`,
+              data: null,
+            });
+          });
       
       exports.updateOne = (Model) =>
         catchAsync(async (req, res, next) => {
@@ -80,22 +94,50 @@ exports.getAll = (Model) =>
           });
         });
       
-      exports.createOne = (Model) =>
-        catchAsync(async (req, res, next) => {
-      // If the user is logged in and has a family, attach the family ID to the request body
-    if (req.user && req.user.family) {
-      req.body.family = req.user.family._id; // Automatically set the family from the logged-in user
-      console.log('Family ID for new document:', req.body.family);
-    }
-    console.log('Logged in user:', req.user);
+    //   exports.createOne = (Model) =>
+    //     catchAsync(async (req, res, next) => {
+    //   // If the user is logged in and has a family, attach the family ID to the request body
+    // if (req.user && req.user.family) {
+    //   req.body.family = req.user.family._id; // Automatically set the family from the logged-in user
+    //   //console.log('Family ID for new document:', req.body.family);
+
+    // }
+    // //console.log('Logged in user:', req.user);
+    // console.log('Request body data:', req.body); // Log the incoming data
+    //       const doc = await Model.create(req.body);
+    //       res.status(201).json({
+    //         status: 'success',
+    //         data: {
+    //           data: doc,
+    //         },
+    //       });
+    //     });
+
+    exports.createOne = (Model) =>
+      catchAsync(async (req, res, next) => {
+        try {
+          // If the user is logged in and has a family, attach the family ID to the request body
+          if (req.user && req.user.family) {
+            req.body.family = req.user.family._id;
+           // console.log('Family ID for new document:', req.body.family);
+          }
+    
+          //console.log('Logged in user:', req.user);
+          //console.log('Request body data:', req.body); // Log the complete body
+    
           const doc = await Model.create(req.body);
+    
           res.status(201).json({
             status: 'success',
             data: {
               data: doc,
             },
           });
-        });
+        } catch (err) {
+          console.error('Error creating document:', err);
+          return next(new AppError('Error creating document', 500));
+        }
+      });
       
       exports.getOne = (Model) =>
         catchAsync(async (req, res, next) => {

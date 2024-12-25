@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Transaction = require('./models/transactionModel')
+const Transaction = require('./models/transactionModel');
 
 
 //importing the dotenv file
@@ -48,4 +48,16 @@ const app = require('./app')
 const port = process.env.port;
 const server = app.listen(port, () => {
     console.log(`family app server is running on Port: ${port}`);
+    });
+//The process.on('unhandledRejection') block is used to handle unhandled promise rejections in Node.js
+//This listens for the unhandledRejection event, which is emitted when a Promise is rejected, but there is no .catch() handler to handle the error. This is a common way to catch errors that occur in asynchronous code but are not properly handled.
+//Unhandled promise rejections can cause an application to behave unpredictably. Catching them ensures stability and helps identify where errors are occurring in asynchronous code.
+process.on('unhandledRejection', (err) => {
+      //console.log(err.name, err.message);
+      //console.log(err);
+      // server.close(() => {
+      //   process.exit(1);
+      // });
+    
+      //console.log('UNHANDLED REJECTION!  ...');
     });

@@ -45,7 +45,7 @@ if(process.env.NODE_ENV='development'){
 // Limit requests from same API
 //prevent same ip from making too many requests
 const limiter = rateLimit({
-  max: 100,
+  max: 300,
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this IP, please try again in an hour!'
 });
@@ -56,8 +56,8 @@ app.use('/api', limiter);
 //The parsed JSON object is then assigned to req.body so that it can be accessed in your route handlers.
 //app.use(express.json());
 // Body parser, reading data from body into req.body
-app.use(express.json({ limit: '10kb' })); //limit the message body to 10kb
-app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(express.json({ limit: '50kb' })); //limit the message body to 10kb
+app.use(express.urlencoded({ extended: true, limit: '50kb' }));
 //app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection
@@ -83,7 +83,7 @@ app.use(
 //Middleware functions are functions that have access to the request object (req), the response object (res), and the next function in the application's request-response cycle.
 //The next() function is critical in Express middleware. It tells Express to move on to the next middleware function in the stack. If next() is not called, the request will hang, and the response will not be sent to the client.
 app.use((req, res, next) => {
-  console.log('Hello from the middleware 👋');
+  //console.log('Hello from the middleware 👋');
   next();
 });
 
@@ -91,6 +91,16 @@ app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 });
+
+// //(1) FOR REACT Serve static files from the "build" directory (React frontend)
+// app.use(express.static(path.join(__dirname, 'build')));
+
+// // Serve the React frontend for all unmatched routes
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+// });
+
+
 
 
 // 3) ROUTES
@@ -101,23 +111,67 @@ app.use('/api/v1/budgtrxn',budgetTrxnRouter);
 app.use('/api/v1/users',userRouter);
 app.use('/api/v1/family',familyRouter);
 
+// app.all('*', (req, res, next) => {
+//   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+// });
+
+
+
+// 4) SERVE STATIC FILES FOR REACT (Place after API routes)
+// Serve static files from the React build directory
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Serve the React frontend for all unmatched routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+console.log(path.join(__dirname, 'build', 'index.html'));
+
+// 5) HANDLE API ERRORS
+//This should after serving the STATIC files for React above.
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
 app.use(globalErrorHandler);
 
-
-
-
 //////The following connects the front end to the back end and run on port 5000////////////
 //NB: Keep this React connection at the bottom of the page like this
-app.use(express.static(path.join(__dirname, ".", "build")));
-app.use(express.static("public"));
+// app.use(express.static(path.join(__dirname, ".", "build")));
+// app.use(express.static("public"));
 
-//Serve the front-end application
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, ".", "build", "index.html"));
-});
+// //Serve the front-end application
+// //(1) FOR REACT Serve static files from the "build" directory (React frontend)
+// app.use(express.static(path.join(__dirname, 'build')));
+
+// // Serve the React frontend for all unmatched routes
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+// });
+
+
+
+
+
+// app.use((req, res) => {
+//   res.sendFile(path.join(__dirname, ".", "build", "index.html"));
+// });
+//Serve static files from the "build" directory (React frontend)
+// app.use(express.static(path.join(__dirname, 'build')));
+
+// Define a simple route for the root '/'
+// app.get('/', (req, res) => {
+//   res.send('Welcome to the API!');
+// });
+
+// // Catch all remaining routes and serve the frontend app (React)
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+// });
+
+// // Error handling for unhandled routes
+// app.all('*', (req, res, next) => {
+//   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+// });
 
 module.exports = app;

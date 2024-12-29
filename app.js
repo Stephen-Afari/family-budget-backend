@@ -24,7 +24,8 @@ app.use(cors());
 // Access-Control-Allow-Origin *
 // api.natours.com, front-end natours.com
 // app.use(cors({
-//   origin: 'https://www.natours.com'
+//   origin: 'https://family-budget-1rqz.onrender.com/logIn'
+
 // }))
 //The line app.options('*', cors()); is used in a Node.js/Express application to handle preflight requests for Cross-Origin Resource Sharing (CORS).
 //Preflight requests are a type of request sent by the browser when a web application running in one origin (like https://example.com) requests resources from a different origin (like https://api.example.com).

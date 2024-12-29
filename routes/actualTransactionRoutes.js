@@ -6,7 +6,7 @@ const authController = require('../controllers/authController')
 
 router.use(authController.protect); // Ensure user is authenticated for all routes
 
-router.route('/').get(actTransactionControler.restrictToFamily,actTransactionControler.getAllActTransaction).post(actTransactionControler.createActTransaction)
+router.route('/').get(actTransactionControler.restrictToFamily,actTransactionControler.getAllActTransaction).post(actTransactionControler.createActTransaction).delete(actTransactionControler.deleteAllActTransaction)
 
 router
 .route('/:id')

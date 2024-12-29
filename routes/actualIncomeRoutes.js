@@ -5,7 +5,7 @@ const actIncomeControler = require('../controllers/actIncomeController');
 
 //router.use(authController.protect); // Ensure user is authenticated for all routes
 
-router.route('/').get(authController.protect,actIncomeControler.restrictToFamily,actIncomeControler.getActAllIncome).post(authController.protect,actIncomeControler.createActIncome)
+router.route('/').get(authController.protect,actIncomeControler.restrictToFamily,actIncomeControler.getActAllIncome).post(authController.protect,actIncomeControler.createActIncome).delete(actIncomeControler.deleteAllActIncome)
 
 router
   .route('/:id')

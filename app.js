@@ -20,7 +20,26 @@ const familyRouter = require('./routes/familyRoutes')
 
 //1) GLOBAL MIDDLEWARES
 // Implement CORS
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:3000', // Local development
+  'https://family-budget-backend.onrender.com/api/v1/' // Deployed frontend on Render
+];
+//The origin callback dynamically checks if the request's origin is in the allowedOrigins array
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true); // Allow the origin
+    } else {
+      callback(new Error('Not allowed by CORS')); // Reject the request
+    }
+  },
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'], // Allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+  credentials: true // Allow cookies and credentials
+}));
+// app.use(cors());
 // Access-Control-Allow-Origin *
 // api.natours.com, front-end natours.com
 // app.use(cors({

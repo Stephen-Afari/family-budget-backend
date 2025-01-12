@@ -46,11 +46,21 @@ if(process.env.NODE_ENV='development'){
 // Limit requests from same API
 //prevent same ip from making too many requests
 const limiter = rateLimit({
-  max: 310,
-  windowMs: 60 * 60 * 1000,
-  message: 'Too many requests from this IP, please try again in an hour!'
+  max: 5000,
+  windowMs: 60 * 120 * 1000,
+  message: 'Too many requests from this IP, please try again in an hour!',
+//Add a handler to the rate limiter to log requests that exceed the limit. This helps you understand which IPs or routes are causing the issue.
+  handler: (req, res, next, options) => {
+    console.log(`Rate limit exceeded: IP=${req.ip}, Route=${req.originalUrl}`);
+    res.status(options.statusCode).send(options.message);
+  },
 });
 app.use('/api', limiter);
+//Add logging to track when the rate limiter is triggered:
+// app.use('/api', (req, res, next) => {
+//   console.log(`Rate limiter applied for IP: ${req.ip}`);
+//   next();
+// });
 
 //express.json(): This is a built-in middleware function in Express that parses incoming requests with JSON payloads and is based on body-parser. It extracts the JSON data from the request body and makes it available under req.body.
 //When a request is sent to the server, if the request’s Content-Type is application/json, express.json() middleware will automatically parse the JSON-formatted request body.

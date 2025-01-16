@@ -22,7 +22,7 @@ const familyRouter = require('./routes/familyRoutes')
 // Implement CORS
 const allowedOrigins = [
   'http://localhost:3000', // Local development
-  'https://family-budget-backend.onrender.com/api/v1/' // Deployed frontend on Render
+  'https://family-budget-1rqz.onrender.com' // Deployed frontend on Render
 ];
 //The origin callback dynamically checks if the request's origin is in the allowedOrigins array
 app.use(cors({
